@@ -3,626 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Body Language - Pet Care Guide</title>
+    <title>Community - Pet Care Guide</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Style for the title */
-        .content-header {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            margin: 20px;
-            font-size: 32px;
-            font-weight: bold;
-            color: #333;
+        /* General Reset */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
         }
 
-        /* Breed Encyclopedia Styles */
-        .breed-header {
+
+        /* Main Content Area */
+        .community-container {
+            margin-left: 270px;
+            padding: 20px;
+            background: linear-gradient(to bottom, #FFDD44, #E2B206);
+            min-height: 100vh;
+        }
+
+        .community-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .community-header img {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            width: 120px;
+        }
+
+        /* Create Post Section */
+        .create-post {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            margin: 50px 50px;
+        }
+
+        .create-post textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: none;
+        }
+
+        .post-options {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
-            padding: 0 1rem;
+            margin-top: 10px;
         }
 
-        .breed-tabs {
+        .post-options label {
             display: flex;
-            gap: 1rem;
-        }
-
-        .breed-tab {
-            padding: 0.75rem 1.5rem;
-            border: 1px solid #000;
-            border-radius: 0.5rem;
-            background: #e9e9e9;
-            color: #000;
+            align-items: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            font-size: 14px;
         }
 
-        .breed-tab.active {
-            background: #D7AC1D;
-            color: black;
-            border: 1px solid black;
+        .post-options label i {
+            margin-right: 5px;
         }
 
-        .search-container {
-            position: relative;
-            width: 300px;
-            border: 1px solid #000;
-            border-radius: 0.5rem;
+        .post-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
-        .search-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            background: var(--secondary-bg);
-            color: var(--text-color);
-        }
-
-        /* 2-Column Layout for Both Dogs and Cats */
-        .breed-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-            padding: 1rem;
-        }
-
-        .breed-card {
+        /* Post Card Styles */
+        .post-card {
             background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            height: 100%;
-            cursor: pointer;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            margin: 50px 50px;
         }
 
-        .breed-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-        }
-
-        .breed-image {
-            height: 300px;
-            width: 100%;
+        .post-header {
             display: flex;
             align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            margin-bottom: 10px;
         }
 
-        .breed-image img {
-            width: 300px;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
+        .post-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
         }
 
-        .breed-card:hover .breed-image img {
-            transform: scale(1.05);
-        }
-
-        .breed-info {
-            display: none;
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            grid-column: 1 / -1;
-        }
-
-   /* Modal Styles */
-   .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal.show {
-            opacity: 1;
-        }
-
-        .modal-content {
-            background-color: #fff;
-            border-radius: 12px;
-            width: 80%;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow: auto;
-            position: relative;
-            transform: translateY(-50px);
-            transition: transform 0.3s ease;
-        }
-
-        .modal.show .modal-content {
-            transform: translateY(0);
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 24px;
-            color: #333;
-            cursor: pointer;
-            z-index: 10;
-        }
-
-        .modal-header {
-            background-color: #D7AC1D;
-            padding: 1.5rem;
-            border-top-left-radius: 12px;
-            border-top-right-radius: 12px;
-            position: relative;
-        }
-
-        .modal-title {
-            color: #000;
-            font-size: 1.5rem;
+        .post-header .username {
             font-weight: bold;
-            margin: 0;
-            text-align: center;
         }
 
-        .modal-body {
-            padding: 2rem;
+        .post-content {
+            font-size: 14px;
+            margin-bottom: 10px;
         }
 
-        .modal-image-container {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-image {
-            max-width: 100%;
-            max-height: 400px;
+        .post-image {
+            width: 300px;
+            max-height: 200px;
+            object-fit: cover;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
         }
 
-        .modal-description {
-            color: #333;
-            line-height: 1.6;
-            font-size: 1rem;
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #555;
         }
 
-        @media (max-width: 768px) {
-            .modal-content {
-                width: 95%;
-            }
-            
-            .modal-header {
-                padding: 1rem;
-            }
-            
-            .modal-title {
-                font-size: 1.2rem;
-            }
-            
-            .modal-body {
-                padding: 1rem;
-            }
-            
-            .breed-grid {
-                grid-template-columns: 1fr;
-            }
+        .post-actions i {
+            margin-right: 5px;
+            cursor: pointer;
         }
+
+        .post-actions .likes { color: red; }
+        .post-actions .comments { color: #007bff; }
+        .post-actions .shares { color: #28a745; }
     </style>
 </head>
-<body class="dashboard-body">
+<body>
+
+    <!-- Sidebar -->
     <nav class="sidebar">
-        <div class="sidebar-header">
-            <img src="image/logos.png" alt="Pet Care Logo" class="sidebar-logo" id="sidebarLogo">
-            <button class="toggle-sidebar" id="toggleSidebar">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
+        <img src="image/logos.png" alt="Pet Care Logo" class="sidebar-logo">
         
-        <div class="sidebar-menu">
-            <a href="breedEncyclopedia.html" class="menu-item">
-                <i class="fas fa-paw"></i>
-                <span>Breed Encyclopedia</span>
-            </a>
-            <a href="bodyLanguage.html" class="menu-item active">
-                <i class="fas fa-language"></i>
-                <span>Body Language</span>
-            </a>
-            <a href="latestPetCareTIp.html" class="menu-item">
-                <i class="fas fa-heart"></i>
-                <span>Latest Pet Care Tips</span>
-            </a>
-            <a href="essential.html" class="menu-item">
-                <i class="fas fa-shield-alt"></i>
-                <span>Essential Care</span>
-            </a>
-            <a href="community.html" class="menu-item">
-                <i class="fas fa-users"></i>
-                <span>Community</span>
-            </a>
-            <a href="index.html" class="menu-item" onclick="localStorage.clear();" style="margin-top: auto; color: #000000;">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Sign Out</span>
-            </a>
-        </div>
+        <a href="breedEncyclopedia.html" class="menu-item">
+            <i class="fas fa-paw"></i> Breed Encyclopedia
+        </a>
+        <a href="bodyLanguage.html" class="menu-item">
+            <i class="fas fa-language"></i> Body Language
+        </a>
+        <a href="latestPetCareTip.html" class="menu-item">
+            <i class="fas fa-heart"></i> Latest Pet Care Tips
+        </a>
+        <a href="community.html" class="menu-item active">
+            <i class="fas fa-users"></i> Community
+        </a>
+        <a href="index.html" class="menu-item" onclick="localStorage.clear();" style="margin-top: auto;">
+            <i class="fas fa-sign-out-alt"></i> Sign Out
+        </a>
     </nav>
 
-    <main class="dashboard-content">
-        <div class="content-header">
-            <h1>Body Language</h1>
+    <!-- Community Section -->
+    <section class="community-container">
+        <div class="community-header">
+            Community
         </div>
-        
-        <div class="content-section">
-            <div class="breed-header">
-                <div class="breed-tabs">
-                    <button class="breed-tab active" data-tab="dogs">Dogs</button>
-                    <button class="breed-tab" data-tab="cats">Cats</button>
-                </div>
-                <div class="search-container">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="search-input" placeholder="Search breeds..." id="breedSearch">
-                </div>
-            </div>
-            
-            <!-- Dogs Section - 2 Columns -->
-            <div class="breed-section active" id="dogs">
-                <div class="breed-grid">
-                    <div class="breed-card" data-breed="german_shepherd">
-                        <div class="breed-image">
-                            <img src="image/bodylangImage/1.PNG" alt="Dog body language">
-                        </div>
-                    </div>
-                    <div class="breed-card" data-breed="golden_retriever">
-                        <div class="breed-image">
-                            <img src="image/bodylangImage/2.PNG" alt="Dog body language">
-                        </div>
-                    </div>
-                    <div class="breed-card" data-breed="siberian_husky">
-                        <div class="breed-image">
-                            <img src="image/bodylangImage/3.PNG" alt="Dog body language">
-                        </div>
-                    </div>
-                    <div class="breed-card" data-breed="bulldog">
-                        <div class="breed-image">
-                            <img src="image/bodylangImage/4.PNG" alt="Dog body language">
-                        </div>
-                    </div>
-                    <div class="breed-card" data-breed="beagle">
-                        <div class="breed-image">
-                            <img src="image/bodylangImage/5.PNG" alt="Dog body language">
-                        </div>
-                    </div>
-                    <div class="breed-card" data-breed="alaskan_husky">
-                        <div class="breed-image">
-                            <img src="image/bodylangImage/6.PNG" alt="Dog body language">
-                        </div>
-                    </div>
-                    <div class="breed-card" data-breed="poodle">
-                        <div class="breed-image">
-                            <img src="image/bodylangImage/7.PNG" alt="Dog body language">
-                        </div>
-                    </div>
-                    <div class="breed-card" data-breed="chihuahua">
-                        <div class="breed-image">
-                            <img src="image/bodylangImage/8.PNG" alt="Dog body language">
-                        </div>
-                    </div>
-                </div>
-                <div class="no-results" style="display: none;">No matching breeds found</div>
-            </div>
 
-            <!-- Cats Section - Also 2 Columns -->
-            <div class="breed-section" id="cats">
-                <div class="breed-grid">
-                    <div class="breed-card" data-breed="persian">
-                        <div class="breed-image">
-                            <img src="image/bodylangImage/1 cat.PNG" alt="cat body language">
-                        </div>
-                    </div>
-                    <div class="breed-card" data-breed="siamese">
-                        <div class="breed-image">
-                            <img src="image/bodylangImage/2 cat.PNG" alt="cat body language">
-                        </div>
-                    </div>
-                    <div class="breed-card" data-breed="british_shorthair">
-                        <div class="breed-image">
-                            <img src="image/bodylangImage/3 cat.PNG" alt="cat body language">
-                        </div>
-                    </div>
-                    <div class="breed-card" data-breed="maine_coon">
-                        <div class="breed-image">
-                            <img src="image/bodylangImage/4 cat.PNG" alt="cat body language">
-                        </div>
-                    </div>
-                    <div class="breed-card" data-breed="ragdoll">
-                        <div class="breed-image">
-                            <img src="image/bodylangImage/5 cat.PNG" alt="cat body language">
-                        </div>
-                    </div>
-                    <div class="breed-card" data-breed="sphynx">
-                        <div class="breed-image">
-                            <img src="image/bodylangImage/6 cat.PNG" alt="cat body language">
-                        </div>
-                    </div>
-                    <div class="breed-card" data-breed="american_shorthair">
-                        <div class="breed-image">
-                            <img src="image/bodylangImage/7 cat.PNG" alt="cat body language">
-                        </div>
-                    </div>
-                    <div class="breed-card" data-breed="burmese">
-                        <div class="breed-image">
-                            <img src="image/bodylangImage/8 cat.PNG" alt="cat body language">
-                        </div>
-                    </div>
+        <!-- Create Post Section -->
+        <div class="create-post">
+            <textarea placeholder="What's on your mind?"></textarea>
+            <div class="post-options">
+                <div>
+                    <label><i class="fas fa-image"></i> Image</label>
+                    <label><i class="fas fa-video"></i> Video</label>
                 </div>
-                <div class="no-results" style="display: none;">No matching breeds found</div>
+                <button class="post-btn">Post</button>
             </div>
         </div>
-    </main>
 
-    <div class="modal" id="imageModal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <div class="modal-header">
-                <h2 class="modal-title" id="modalTitle">Body Language</h2>
+        <!-- Sample Posts -->
+        <div class="post-card">
+            <div class="post-header">
+                <img src="image/community/pfp.png" alt="User">
+                <span class="username">James Bayne</span>
             </div>
-            <div class="modal-body">
-                <div class="modal-image-container">
-                    <img id="modalImage" class="modal-image" src="" alt="Body language image">
-                </div>
-                <p class="modal-description" id="modalDescription">
-                    A cat becomes frightened when they perceive a threat, whether real or imagined. 
-                    Their body language may include flattened ears, dilated pupils, puffed-up fur, 
-                    a crouched posture, or a flicking tail. Some cats may freeze, hide, or try to 
-                    escape, while others might hiss or swat if they feel cornered. Fear is a natural 
-                    survival instinct that helps cats stay safe.
-                </p>
+            <div class="post-content">
+                "Dogs’ noses are like human fingerprints – each one is unique! Have you noticed your pet’s special nose print?"
+            </div>
+            <img src="image/community/1.webp" alt="Dog Nose" class="post-image">
+            <div class="post-actions">
+                <span class="likes"><i class="fas fa-heart"></i> 199 Likes</span>
+                <span class="comments"><i class="fas fa-comment"></i> 27 Comments</span>
+                <span class="shares"><i class="fas fa-share"></i> 23 Shares</span>
             </div>
         </div>
-    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const bodyLanguageData = {
-                "german_shepherd": {
-                    title: "Dog Body Language",
-                    description: "German Shepherds communicate through various body signals. Ears forward indicate alertness, while ears back may signal fear or submission. A wagging tail at mid-height shows friendliness, while a stiff, high tail can indicate aggression or excitement."
-                },
-                "golden_retriever": {
-                    title: "Dog Body Language",
-                    description: "Golden Retrievers are expressive dogs. A relaxed, wagging tail and soft eyes show happiness. Yawning or lip licking can indicate stress. Play bows (front down, rear up) signal an invitation to play."
-                },
-                "siberian_husky": {
-                    title: "Dog Body Language",
-                    description: "Huskies have distinctive expressions. Their 'talking' vocalizations are unique. Direct eye contact can be challenging, while avoiding eye contact shows submission. A curled tail indicates relaxation."
-                },
-                "bulldog": {
-                    title: "Dog Body Language",
-                    description: "Bulldogs communicate through body posture. A relaxed stance with a wagging tail shows contentment. Snorting or grunting can be normal breathing or indicate excitement. Wrinkled forehead may signal concern."
-                },
-                "beagle": {
-                    title: "Dog Body Language",
-                    description: "Beagles use their whole body to communicate. Nose to the ground signals tracking mode. Tail straight up shows alertness. Whining or howling indicates they've found a scent or want attention."
-                },
-                "alaskan_husky": {
-                    title: "Dog Body Language",
-                    description: "Similar to Siberian Huskies but often more vocal. Pawing at you means they want attention. A 'smiling' expression with teeth showing is often a submissive grin, not aggression."
-                },
-                "poodle": {
-                    title: "Dog Body Language",
-                    description: "Poodles are intelligent and expressive. Perked ears show interest. A high, stiff tail can indicate alertness or excitement. 'Dancing' on hind legs is a common attention-seeking behavior."
-                },
-                "chihuahua": {
-                    title: "Dog Body Language",
-                    description: "Chihuahuas are bold despite their size. Trembling can be from excitement or nervousness. Ears back may indicate fear. Standing tall with chest out shows confidence."
-                },
-                "persian": {
-                    title: "Cat Body Language",
-                    description: "Persians are generally calm. Slow blinking shows trust and affection. Flattened ears indicate displeasure or fear. A puffed tail signals alarm or agitation."
-                },
-                "siamese": {
-                    title: "Cat Body Language",
-                    description: "Siamese are vocal and expressive. Loud meows demand attention. Tail twitching shows excitement or irritation. Kneading with paws indicates contentment."
-                },
-                "british_shorthair": {
-                    title: "Cat Body Language",
-                    description: "British Shorthairs are reserved. Half-closed eyes show relaxation. Turning away signals they want space. A slow tail wag means mild interest or contemplation."
-                },
-                "maine_coon": {
-                    title: "Cat Body Language",
-                    description: "Maine Coons are gentle giants. Chirping sounds show happiness. Presenting their belly indicates trust. A flicking tail tip may signal mild irritation."
-                },
-                "ragdoll": {
-                    title: "Cat Body Language",
-                    description: "Ragdolls live up to their name. Going limp when held shows trust. Following you around indicates affection. Dilated pupils during play show excitement."
-                },
-                "sphynx": {
-                    title: "Cat Body Language",
-                    description: "Sphynx cats seek warmth. Curling up against you shows affection. Skin twitching may indicate excitement or irritation. Large ears that rotate show they're listening intently."
-                },
-                "american_shorthair": {
-                    title: "Cat Body Language",
-                    description: "American Shorthairs are adaptable. Rubbing against you marks territory affectionately. Tail straight up with a hook at the end is a friendly greeting. Purring while sitting near you shows contentment."
-                },
-                "burmese": {
-                    title: "Cat Body Language",
-                    description: "Burmese are people-oriented. Persistent head-butting shows affection. Sitting upright like a human indicates curiosity. Soft, chirping meows are common."
-                }
-            };
+        <div class="post-card">
+            <div class="post-header">
+                <img src="image/community/pfp.png" alt="User">
+                <span class="username">Jocelyn Reyes</span>
+            </div>
+            <div class="post-content">
+                "Did you know? Cats sleep about 12-16 hours a day! 😺 How long does your cat nap?"
+            </div>
+            <img src="image/community/1.webp" alt="Cat Sleeping" class="post-image">
+            <div class="post-actions">
+                <span class="likes"><i class="fas fa-heart"></i> 98 Likes</span>
+                <span class="comments"><i class="fas fa-comment"></i> 38 Comments</span>
+                <span class="shares"><i class="fas fa-share"></i> 12 Shares</span>
+            </div>
+        </div>
 
-            // Modal functionality for body language images
-            const modal = document.getElementById('imageModal');
-            const modalImg = document.getElementById('modalImage');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalDescription = document.getElementById('modalDescription');
-            const closeModal = document.querySelector('.close-modal');
-            const breedCards = document.querySelectorAll('.breed-card');
+    </section>
 
-            // Add click event to breed cards
-            breedCards.forEach(card => {
-                card.addEventListener('click', () => {
-                    const breed = card.dataset.breed;
-                    const imgSrc = card.querySelector('img').src;
-                    const imgAlt = card.querySelector('img').alt;
-                    const data = bodyLanguageData[breed] || {
-                        title: "Body Language",
-                        description: "A cat becomes frightened when they perceive a threat, whether real or imagined. Their body language may include flattened ears, dilated pupils, puffed-up fur, a crouched posture, or a flicking tail. Some cats may freeze, hide, or try to escape, while others might hiss or swat if they feel cornered. Fear is a natural survival instinct that helps cats stay safe."
-                    };
-                    
-                    modalImg.src = imgSrc;
-                    modalImg.alt = imgAlt;
-                    modalTitle.textContent = data.title;
-                    modalDescription.textContent = data.description;
-                    
-                    // Show modal with animation
-                    modal.style.display = 'flex';
-                    setTimeout(() => {
-                        modal.classList.add('show');
-                        document.body.style.overflow = 'hidden';
-                    }, 10);
-                });
-            });
-
-            // Close modal function with animation
-            function closeModalFunction() {
-                modal.classList.remove('show');
-                setTimeout(() => {
-                    modal.style.display = 'none';
-                    document.body.style.overflow = '';
-                }, 300);
-            }
-
-            // Close modal when clicking the close button
-            if (closeModal) {
-                closeModal.addEventListener('click', closeModalFunction);
-            }
-
-            // Close modal when clicking outside
-            window.addEventListener('click', (event) => {
-                if (event.target === modal) {
-                    closeModalFunction();
-                }
-            });
-
-            // Close modal with escape key
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && modal.classList.contains('show')) {
-                    closeModalFunction();
-                }
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-    // Initialize sidebar elements
-    const sidebar = document.querySelector('.sidebar');
-    const sidebarLogo = document.getElementById('sidebarLogo');
-    const toggleBtn = document.getElementById('toggleSidebar');
-    const menuItems = document.querySelectorAll('.menu-item');
-
-    // Set up tooltips for menu items
-    menuItems.forEach(item => {
-        const text = item.querySelector('span').textContent;
-        item.setAttribute('data-tooltip', text);
-    });
-
-    // Handle logo click
-    sidebarLogo.addEventListener('click', () => {
-        sidebar.classList.add('minimized');
-        localStorage.setItem('sidebarMinimized', 'true');
-    });
-
-    // Handle burger icon click
-    toggleBtn.addEventListener('click', () => {
-        sidebar.classList.remove('minimized');
-        localStorage.setItem('sidebarMinimized', 'false');
-    });
-
-    // Restore sidebar state from localStorage
-    if (localStorage.getItem('sidebarMinimized') === 'true') {
-        sidebar.classList.add('minimized');
-    }
-
-    const breedTabs = document.querySelectorAll('.breed-tab');
-    const breedSections = document.querySelectorAll('.breed-section');
-
-    breedTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            // Remove active class from all tabs
-            breedTabs.forEach(t => t.classList.remove('active'));
-            // Add active class to clicked tab
-            tab.classList.add('active');
-            
-            // Hide all sections
-            breedSections.forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            // Show the selected section
-            const tabId = tab.getAttribute('data-tab');
-            document.getElementById(tabId).classList.add('active');
-            
-            // Clear search input when switching tabs
-            const searchInput = document.getElementById('breedSearch');
-            if (searchInput) {
-                searchInput.value = '';
-                filterBreeds('');
-            }
-        });
-    });
-
-    // Add search functionality
-    const searchInput = document.getElementById('breedSearch');
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            filterBreeds(e.target.value.toLowerCase());
-        });
-    }
-
-    function filterBreeds(searchTerm) {
-        const activeSection = document.querySelector('.breed-section.active');
-        if (!activeSection) return;
-        
-        const breedCards = activeSection.querySelectorAll('.breed-card');
-        const noResults = activeSection.querySelector('.no-results');
-        let hasVisibleCards = false;
-
-        breedCards.forEach(card => {
-            const breedName = card.dataset.breed.toLowerCase();
-            const isVisible = breedName.includes(searchTerm);
-            card.style.display = isVisible ? 'block' : 'none';
-            if (isVisible) hasVisibleCards = true;
-        });
-
-        if (noResults) {
-            noResults.style.display = hasVisibleCards ? 'none' : 'block';
-        }
-    }
-
-});
-    </script>
 </body>
 </html>
